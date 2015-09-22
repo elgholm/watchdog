@@ -1,0 +1,15 @@
+# These must be set
+export MACHINE_NAME=Munin
+export NOTIFY_CRITICALS=5
+export NOTIFY_WARNINGS=15
+
+# Below are optionals, if used by other scripts
+
+# For SMS-notifications in notify_critical
+export SMS_ACCOUNT=
+export SMS_PWD=
+export SMS_RECEIVERS=
+
+# For Email-notifications in notify_warning
+export EMAIL_FROM=no-reply@yourdomain.se
+export EMAIL_TO=name@yourdomain.se

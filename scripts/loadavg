@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# This script checks and warns about high load average.
+# Part of the watchdog package, https://github.com/elgholm/watchdog
+
+# History
+# 2015-09-22 - First version written by Charlie Elgholm  
+
+# Panics:	>10 the last 5 minutes
+# Criticals:	>3 the last minute or >2 the last 5 minutes
+# Warnings:	>2 the last minute or >1 the last 5 minutes
+
+cat /proc/loadavg | awk '
+{
+	t1min=strtonum($1);
+	t5min=strtonum($2);
+	t10min=strtonum($3);
+	if(t5min>10){		print "PANIC: Load average is "$2" for the last 5 minutes!"
+	}else if(t1min>3){	print "CRITICAL: Load average is "$1" for the last minute!"
+	}else if(t5min>2){	print "CRITICAL: Load average is "$2" for the last 5 minutes!"
+	}else if(t1min>2){	print "WARNING: Load average is "$1" for the last minute!"
+	}else if(t5min>1){	print "WARNING: Load average is "$1" for the last 5 minutes!"
+	}
+}
+'
+

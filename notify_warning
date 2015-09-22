@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Script for notifying about the warning events
+# Usually this is in the form of an email
+
+# Change the below line to whatever works for you.
+cat $1 | mailx -s $MACHINE_NAME -r $EMAIL_FROM $EMAIL_TO

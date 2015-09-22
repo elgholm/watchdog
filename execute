@@ -1,0 +1,81 @@
+#!/bin/bash
+
+# Get this script directory and change into it
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+cd $DIR
+
+# Initialize environment variables from setup
+. ./setup
+
+# Internal functions, also exported to child scripts
+
+log(){
+	echo -e `date "+%Y-%m-%d %H:%M:%S"`"\t$1\t$2\t$3" >>log
+}
+
+# Remove old notifications
+find out -cmin +$NOTIFY_WARNINGS -name "*.warning*" -exec rm -f {} \;
+find out -cmin +$NOTIFY_CRITICALS -name "*.critical*" -exec rm -f {} \;
+#find out -cmin +$NOTIFY_PANICS -name "*.panic*" -exec rm -f {} \;
+
+# Run scripts, output to out/<file>.(warning|critical|panic)
+FILES="scripts/*"
+for file in $FILES
+do
+	if [ -x $file ]
+	then
+		export file
+		$file | awk -v file=$file '
+BEGIN { FS = ":" } 
+{
+	event=tolower($1)
+	if(event=="warning" || event=="critical" || event=="panic"){
+		fileName = "out/" substr(file, index(file, "/")+1)  "." event
+		print $0 >> fileName
+	}else{
+		print "UNKNOWN LINE: " $0
+	}
+}
+';
+	fi
+done
+
+# Notify panics
+FILES=`find out -name "*.panic"`
+for file in $FILES
+do
+	# If not already notified
+	if [ ! -r $file.sent ]
+	then
+		log PANIC $file "`cat $file`"
+		./notify_panic $file
+		echo `date` >$file.sent
+	fi
+done
+
+# Notify criticals
+FILES=`find out -name "*.critical"`
+for file in $FILES
+do
+	# If not already notified
+	if [ ! -r $file.sent ]
+	then
+		log CRITICAL $file "`cat $file`"
+		./notify_critical $file
+		echo `date` >$file.sent
+	fi
+done
+
+# Notify warnings
+FILES=`find out -name "*.warning"`
+for file in $FILES
+do
+        if [ ! -r $file.sent ]
+        then
+                log WARNING $file "`cat $file`"
+                ./notify_warning $file
+                echo `date` >$file.sent
+        fi
+done
+
+

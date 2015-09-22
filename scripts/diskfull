@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# This script checks and warns about high disk usage.
+# Part of the watchdog package, https://github.com/elgholm/watchdog
+
+# History
+# 2015-09-22 - First version written by Charlie Elgholm
+
+# Panics:       None
+# Criticals:    >=85% disk usage
+# Warnings:     >=80% disk usage
+
+df -Ph | awk '
+NR > 1 {
+	t=strtonum($5);
+	if(t>=85){		print "CRITICAL: Disk "$6" is "$5" full, only "$4" of "$2" remaining!"
+	}else if(t>=80){	print "WARNING: Disk "$6" is "$5" full, only "$4" of "$2" remaining!"
+	}
+}
+'
+
