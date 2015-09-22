@@ -9,7 +9,7 @@ The main idea is to only require bash and normal Linux GNU utilities, be easy to
 
 ## Description of files in this package:
 - "setup": This file contains your setup, change to suit your needs.
-- "execute": The main file who should be executed, add this to your cron, preferable for every minute.
+- "execute": The main script, add this to your cron, preferable for every minute.
 - "log" - Logfile
 - "scripts/*": The individual scripts, executed each time "execute" is run (by cron).
 - "out/*": Placeholder directory for outputs by the scipts, check here for status.
@@ -21,16 +21,15 @@ The main idea is to only require bash and normal Linux GNU utilities, be easy to
 
 ## How to use?
 1. Create a directory somewhere in your machine, preferable under the home-directory of the root-user, i.e. /root/watchdog.
-2. Copy all files in this package to the above directory. Make sure execute-, notify_*- and scripts/*-files are executable.
-3. Edit the setup-file to your liking.
-4. Check notify_*-files, and edit them to your liking.
-5. Check scripts/*-files, and edit them to your liking. Place any new monitoring instructions here.
-6. Add the file "execute" to your crontab, i.e "* * * * * /root/watchdog/execute" for monitoring each minute.
+2. Copy all files in this package to the above directory. Make sure "execute", "notify*" and "scripts/*"-files are executable.
+3. Edit the "setup" and "notify*" to your liking.
+4. Check scripts/*-files (and edit them to your liking).
+5. Add the file "execute" to your crontab, i.e "* * * * * /root/watchdog/execute" for monitoring each minute.
 
 ## Roll your own monitoring scripts?
-Great! Please share them with the community.
-Just place your script (executable) under the scripts-directory, and print "WARNING/CRITICAL/PANIC: <Your text>" when something happens.
-You'll get the idea. It's meant to be simple.
+Great! Just place your script (executable) under the scripts-directory, and make sure they
+print "WARNING/CRITICAL/PANIC: <Your text>" when something happens.
+You'll get the idea. It's meant to be simple. Please share with the community.
 
 Regards
 Charlie Elgholm
