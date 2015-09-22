@@ -2,6 +2,7 @@
 export MACHINE_NAME=Munin
 export NOTIFY_CRITICALS=5
 export NOTIFY_WARNINGS=15
+# NOTIFY_CRITICALS and NOTIFY_WARNINGS specify how long the system will wait before notifying again
 
 # Below are optionals, if used by other scripts
 
