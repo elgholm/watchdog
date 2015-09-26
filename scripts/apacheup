@@ -14,11 +14,13 @@
 # URL to check
 URL=https://www.swedbank-aktiellt.se/pls/casper/pub_uptime
 
-IS_UP=`curl -s --head $URL | head -n 1 | grep -c "200 OK"`
+RLINE=`curl -s --head $URL | head -n 1`
+IS_UP=`echo $RLINE | grep -c "200 OK"`
 if test $IS_UP -ne 1 ; then
         sleep 3
+        RLINE=`curl -s --head $URL | head -n 1`
+        IS_UP=`echo $RLINE | grep -c "200 OK"`
         if test $IS_UP -ne 1 ; then
-        sleep 3
-                echo "CRITICAL: Webserver is not responding correctly!"
+                echo "CRITICAL: Webserver is not responding correctly! ($RLINE)"
         fi
 fi
