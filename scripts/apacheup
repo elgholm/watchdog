@@ -4,7 +4,8 @@
 # Part of the watchdog package, https://github.com/elgholm/watchdog
 
 # History
-# 2015-09-25 - Removed "HTTP/1.1" in check, and added so that a fail issues another request before alerting. /Charlie Elgholm
+# 2015-09-27 - Rewrite, better curl-call with --write-out and other arguments, and case-statement instead of if. /Charlie Elgholm
+# 2015-09-25 - Removed "HTTP/1.1" in check, and added so that a fail issues another request before alerting. /Charlie Elgholm 
 # 2015-09-22 - First version written by Charlie Elgholm
 
 # Panics:       None
@@ -14,13 +15,8 @@
 # URL to check
 URL=https://www.swedbank-aktiellt.se/pls/casper/pub_uptime
 
-RLINE=`curl -s --head $URL | head -n 1`
-IS_UP=`echo $RLINE | grep -c "200 OK"`
-if test $IS_UP -ne 1 ; then
-        sleep 3
-        RLINE=`curl -s --head $URL | head -n 1`
-        IS_UP=`echo $RLINE | grep -c "200 OK"`
-        if test $IS_UP -ne 1 ; then
-                echo "CRITICAL: Webserver is not responding correctly! ($RLINE)"
-        fi
-fi
+RCODE=`echo $(curl --write-out %{http_code} --silent -S --connect-timeout 3 --no-keepalive --output /dev/null $URL)`
+case $RCODE in
+	200)	;;
+	*)	echo "CRITICAL: Apache not responding correctly! ($RCODE)"
+esac
