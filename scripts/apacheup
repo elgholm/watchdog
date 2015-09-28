@@ -3,20 +3,33 @@
 # This script checks to see if a webserver is up and responding with "200 OK".
 # Part of the watchdog package, https://github.com/elgholm/watchdog
 
-# History
-# 2015-09-27 - Rewrite, better curl-call with --write-out and other arguments, and case-statement instead of if. /Charlie Elgholm
-# 2015-09-25 - Removed "HTTP/1.1" in check, and added so that a fail issues another request before alerting. /Charlie Elgholm 
-# 2015-09-22 - First version written by Charlie Elgholm
-
 # Panics:       None
-# Criticals:    If URL is not responding
-# Warnings:     None
+# Criticals:    If URL is not responding or timeouts (second timeout)
+# Warnings:     If timeouts
 
 # URL to check
-URL=https://www.swedbank-aktiellt.se/pls/casper/pub_uptime
+URL=https://www.swedbank-aktiellt.se/
 
-RCODE=`echo $(curl --write-out %{http_code} --silent -S --connect-timeout 3 --no-keepalive --output /dev/null $URL)`
+# Timeouts
+WARNING_TIMEOUT=5
+CRITICAL_TIMEOUT=7
+
+# Quick-and-dirty if the checks below are having problems for you
+# wget -qO /dev/null $URL || echo "WARNING: Apache not responding correctly!"
+
+RCODE=`echo $(curl --write-out %{http_code} --silent -S --connect-timeout $WARNING_TIMEOUT --no-keepalive --output /dev/null $URL)`
 case $RCODE in
-	200)	;;
-	*)	echo "CRITICAL: Apache not responding correctly! ($RCODE)"
+        000)    echo "WARNING: Apache not responding within $WARNING_TIMEOUT seconds!"
+                RCODE=`echo $(curl --write-out %{http_code} --silent -S --connect-timeout $CRITICAL_TIMEOUT --no-keepalive --output /dev/null $URL)`
+                case $RCODE in
+                        000)    echo "CRITICAL: Apache not responding within $CRITICAL_TIMEOUT seconds!"
+                                ;;
+                        200)    exit 0
+                                ;;
+                        *)      echo "CRITICAL: Apache not responding correctly after $WARNING_TIMEOUT seconds timeout! ($RCODE)"
+                esac
+                ;;
+        200)    exit 0
+                ;;
+        *)      echo "CRITICAL: Apache not responding correctly! ($RCODE)"
 esac
