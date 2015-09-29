@@ -10,12 +10,13 @@
 # URL to check
 URL=https://www.swedbank-aktiellt.se/
 
-# Timeouts
-WARNING_TIMEOUT=5
-CRITICAL_TIMEOUT=7
+# Quick-and-dirty check, since below curl-solution issues "curl: (56) TCP connection reset by peer" falsely (server is up)
+wget --timeout=5 -qO /dev/null "$URL" || echo "CRITICAL: Apache not responding correctly!"
+exit 0
 
-# Quick-and-dirty if the checks below are having problems for you
-# wget -qO /dev/null $URL || echo "WARNING: Apache not responding correctly!"
+# Timeouts
+WARNING_TIMEOUT=10
+CRITICAL_TIMEOUT=10
 
 RCODE=`echo $(curl --write-out %{http_code} --silent -S --connect-timeout $WARNING_TIMEOUT --no-keepalive --output /dev/null $URL)`
 case $RCODE in
