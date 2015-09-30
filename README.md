@@ -16,7 +16,7 @@ The main idea is to only require bash and normal Linux GNU utilities, be easy to
 - "notify_critical": This script is executed when notifying about critical events.
 - "notify_warning": This script is executed when notifying about warning events.
 - "notify_panic": This script is executed when notifying about panic events, maybe also a good place to do a reboot, your choice.
-- "README.md": Your reading it.
+- "README.md": You are reading it.
 - "LICENSE": GNU GPLv2 - The license for this system.
 
 ## How to use?
