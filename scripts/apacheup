@@ -4,8 +4,8 @@
 # Part of the watchdog package, https://github.com/elgholm/watchdog
 
 # Panics:       None
-# Criticals:    If URL is not responding or timeouts (second timeout)
-# Warnings:     If timeouts
+# Criticals:    If URL is not responding or timeouts (5 second timeout)
+# Warnings:     If timeouts - REMOVED FOR NOW
 
 # URL to check
 URL=https://www.swedbank-aktiellt.se/
