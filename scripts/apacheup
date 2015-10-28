@@ -4,18 +4,18 @@
 # Part of the watchdog package, https://github.com/elgholm/watchdog
 
 # Panics:       None
-# Criticals:    If URL is not responding or timeouts (5 second timeout)
-# Warnings:     If timeouts - REMOVED FOR NOW
+# Criticals:    If URL is not responding or timeouts (second timeout)
+# Warnings:     If timeouts
 
 # URL to check
-URL=https://www.swedbank-aktiellt.se/
+URL=http://www.swedbank-aktiellt.se/
 
 # Quick-and-dirty check, since below curl-solution issues "curl: (56) TCP connection reset by peer" falsely (server is up)
-wget --timeout=5 -qO /dev/null "$URL" || echo "CRITICAL: Apache not responding correctly!"
-exit 0
+#wget --timeout=10 -qO /dev/null "$URL" || echo "CRITICAL: Apache not responding correctly!"
+#exit 0
 
 # Timeouts
-WARNING_TIMEOUT=10
+WARNING_TIMEOUT=3
 CRITICAL_TIMEOUT=10
 
 RCODE=`echo $(curl --write-out %{http_code} --silent -S --connect-timeout $WARNING_TIMEOUT --no-keepalive --output /dev/null $URL)`
