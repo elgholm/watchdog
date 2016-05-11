@@ -4,4 +4,5 @@
 # Usually this is in the form of an email
 
 # Change the below line to whatever works for you.
-cat $1 | mailx -s $MACHINE_NAME -r $EMAIL_FROM $EMAIL_TO
+#cat $1 | mailx -s $MACHINE_NAME -r $EMAIL_FROM $EMAIL_TO
+cat $1 | mailx -s "$MACHINE_NAME" -S smtp="smtp://$EMAIL_SMTP" -S from="$EMAIL_FROM" $EMAIL_TO
