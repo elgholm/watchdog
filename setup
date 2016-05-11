@@ -14,3 +14,4 @@ export SMS_RECEIVERS=
 # For Email-notifications in notify_warning
 export EMAIL_FROM=no-reply@yourdomain.se
 export EMAIL_TO=name@yourdomain.se
+export EMAIL_SMTP=smtp.server.net
